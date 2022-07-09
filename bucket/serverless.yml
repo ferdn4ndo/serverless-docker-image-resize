@@ -22,33 +22,33 @@ resources:
         WebsiteConfiguration:
           ErrorDocument: error.html
           IndexDocument: index.html
-          RoutingRules:
-            - 
-              RedirectRule:
-                HostName: ${self:custom.secrets.DOMAIN}
-                HttpRedirectCode: "307"
-                Protocol: "https"
-                ReplaceKeyPrefixWith: "${self:provider.stage}/resize?key="
-              RoutingRuleCondition:
-                HttpErrorCodeReturnedEquals: "404"
-                KeyPrefixEquals: ""
+          # RoutingRules:
+          #   -
+          #     RedirectRule:
+          #       HostName: ${self:custom.secrets.DOMAIN}
+          #       HttpRedirectCode: "307"
+          #       Protocol: "https"
+          #       ReplaceKeyPrefixWith: "${self:provider.stage}/resize?key="
+          #     RoutingRuleCondition:
+          #       HttpErrorCodeReturnedEquals: "404"
+          #       KeyPrefixEquals: ""
     ImageResizeOnTheFlyPolicy:
       Type: AWS::S3::BucketPolicy
-      Properties: 
-        Bucket: 
+      Properties:
+        Bucket:
           Ref: ImageResizeOnTheFly
-        PolicyDocument: 
-          Statement: 
-            - 
-              Action: 
+        PolicyDocument:
+          Statement:
+            -
+              Action:
                 - "s3:*"
               Effect: "Allow"
               Resource:
-                Fn::Join: 
+                Fn::Join:
                   - ""
-                  - 
+                  -
                     - "arn:aws:s3:::"
-                    - 
+                    -
                       Ref: ImageResizeOnTheFly
                     - "/*"
               Principal: "*"

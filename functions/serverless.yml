@@ -8,7 +8,8 @@ provider:
   runtime: nodejs12.x
   stage: ${env:STAGE, 'dev'}
   profile: ${env:PROFILE, 'default'}
-  tracing: true
+  tracing:
+    lambda: true
   region: ${env:REGION, 'us-east-1'}
   environment:
     BUCKET: ${env:BUCKET}

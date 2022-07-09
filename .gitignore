@@ -9,5 +9,6 @@ jspm_packages
 secrets.json
 secrets.env
 
-# VS Code
+# IDEs
 .vscode
+.idea
