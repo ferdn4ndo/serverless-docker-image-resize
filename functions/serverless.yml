@@ -1,4 +1,4 @@
-service: image-resize-on-the-fly-functions
+service: userver-serverless-image-resize-fn
 
 plugins:
   - serverless-plugin-tracing
@@ -13,7 +13,7 @@ provider:
   region: ${env:REGION, 'us-east-1'}
   environment:
     BUCKET: ${env:BUCKET}
-    REGION: ${env:REGION}
+    REGION: ${env:REGION, 'us-east-1'}
   iamRoleStatements:
     - Effect: "Allow"
       Action:

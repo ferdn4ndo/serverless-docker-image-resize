@@ -1,5 +1,5 @@
 {
-  "name": "image-resize",
+  "name": "userver-serverless-image-resize",
   "version": "1.0.0",
   "description": "Serverless image resizing",
   "main": "resize.js",
