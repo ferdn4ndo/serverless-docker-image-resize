@@ -1,0 +1,15 @@
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.LogoWrapper {
+  text-align: center;
+}
+
+.Logo {
+  display: inline-block;
+  width: 400px;
+}

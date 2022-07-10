@@ -1,4 +1,4 @@
-service: image-resize-on-the-fly-bucket
+service: userver-serverless-image-resize-bucket
 
 custom:
   secrets: ${file(../secrets/secrets.json)}
@@ -14,41 +14,28 @@ provider:
 
 resources:
   Resources:
-    ImageResizeOnTheFly:
+    UServerImageResize:
       Type: AWS::S3::Bucket
       Properties:
         AccessControl: PublicReadWrite
         BucketName: ${env:BUCKET}
         WebsiteConfiguration:
-          ErrorDocument: error.html
-          IndexDocument: index.html
-          # RoutingRules:
-          #   -
-          #     RedirectRule:
-          #       HostName: ${self:custom.secrets.DOMAIN}
-          #       HttpRedirectCode: "307"
-          #       Protocol: "https"
-          #       ReplaceKeyPrefixWith: "${self:provider.stage}/resize?key="
-          #     RoutingRuleCondition:
-          #       HttpErrorCodeReturnedEquals: "404"
-          #       KeyPrefixEquals: ""
-    ImageResizeOnTheFlyPolicy:
+          ErrorDocument: static/error.html
+          IndexDocument: static/index.html
+    UServerImageResizePolicy:
       Type: AWS::S3::BucketPolicy
       Properties:
         Bucket:
-          Ref: ImageResizeOnTheFly
+          Ref: UServerImageResize
         PolicyDocument:
           Statement:
-            -
-              Action:
+            - Action:
                 - "s3:*"
               Effect: "Allow"
               Resource:
                 Fn::Join:
                   - ""
-                  -
-                    - "arn:aws:s3:::"
-                    -
-                      Ref: ImageResizeOnTheFly
+                  - - "arn:aws:s3:::"
+                    - Ref: UServerImageResize
                     - "/*"
               Principal: "*"
