@@ -4,12 +4,23 @@ region=${REGION}
 bucket=${BUCKET}
 secrets='/deploy/secrets/secrets.json'
 
+echo "------------------"
+echo 'Configuring SLS and Default profile...'
+echo "------------------"
 # Configure your Serverless installation to talk to your AWS account
 sls config credentials \
+  --overwrite \
   --provider aws \
   --key ${SLS_KEY} \
   --secret ${SLS_SECRET} \
   --profile serverless-admin
+
+# Add the credentials to the Default profile
+echo "
+[default]
+aws_access_key_id=${SLS_KEY}
+aws_secret_access_key=${SLS_SECRET}
+" >> ~/.aws/credentials
 
 # cd into functions dir
 cd /deploy/functions
@@ -40,7 +51,13 @@ echo "  $id"
 rm domain.txt
 rm id.txt
 
-echo "{\"DOMAIN\":\"$domain\"}" > $secrets
+if [ ! "$domain" ];then
+  echo "Domain is empty!"
+  echo "{}" > $secrets
+else
+  echo "Domain is not empty!"
+  echo "{\"DOMAIN\":\"$domain\"}" > $secrets
+fi
 
 cd /deploy/bucket
 
