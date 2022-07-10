@@ -1,7 +1,11 @@
 version: "3"
+
 services:
-  image-resize-on-the-fly:
-    build: .
+  userver-serverless-image-resize:
+    container_name: userver-serverless-image-resize-deploy
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
       - ./secrets:/deploy/secrets
     env_file:

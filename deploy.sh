@@ -22,13 +22,20 @@ aws_access_key_id=${SLS_KEY}
 aws_secret_access_key=${SLS_SECRET}
 " >> ~/.aws/credentials
 
+# Set up the config file
+echo "
+[default]
+region=${REGION}
+output=json
+" >> ~/.aws/config
+
 # cd into functions dir
 cd /deploy/functions
 
 # Deploy functions
-echo "------------------"
-echo 'Deploying function...'
-echo "------------------"
+echo "------------------------"
+echo "Deploying function..."
+echo "------------------------"
 sls deploy
 
 # find and replace the service endpoint
@@ -41,12 +48,11 @@ domain=$(cat domain.txt)
 sed "s@.execute-api.$region.amazonaws.com@@g" domain.txt > id.txt
 id=$(cat id.txt)
 
-echo "------------------"
-echo "Domain:"
-echo "  $domain"
-echo "------------------"
-echo "API ID:"
-echo "  $id"
+echo "------------------------"
+echo "Domain: $domain"
+echo "------------------------"
+echo "API ID: $id"
+echo "------------------------"
 
 rm domain.txt
 rm id.txt
@@ -62,13 +68,25 @@ fi
 cd /deploy/bucket
 
 # Deploy bucket config
-echo "------------------"
-echo 'Deploying bucket...'
+echo "------------------------"
+echo "Deploying bucket..."
+echo "------------------------"
 sls deploy
 
-echo "------------------"
-echo 'Bucket endpoint:'
-echo "  http://$bucket.s3-website.$region.amazonaws.com/"
+echo "Bucket endpoint: http://$bucket.s3-website.$region.amazonaws.com/"
 
-echo "------------------"
-echo "Service deployed. Press CTRL+C to exit."
+# Deploy static files
+echo "------------------------"
+echo "Deploying static content..."
+echo "------------------------"
+
+cd /deploy
+
+aws s3 cp --acl public-read ./static/ "s3://$bucket/static/" --recursive
+aws s3 cp --acl public-read index.html "s3://$bucket/"
+aws s3 cp --acl public-read error.html "s3://$bucket/"
+
+echo "Finished copying static files."
+
+echo "------------------------"
+echo "The service deploy has finished! Press CTRL+C to exit."

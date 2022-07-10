@@ -8,7 +8,7 @@ provider:
   runtime: nodejs12.x
   stage: ${env:STAGE, 'dev'}
   profile: ${env:PROFILE, 'default'}
-  region: us-east-1
+  region: ${env:REGION, 'us-east-1'}
   environment:
     BUCKET: ${env:BUCKET}
 
@@ -20,8 +20,8 @@ resources:
         AccessControl: PublicReadWrite
         BucketName: ${env:BUCKET}
         WebsiteConfiguration:
-          ErrorDocument: static/error.html
-          IndexDocument: static/index.html
+          ErrorDocument: error.html
+          IndexDocument: index.html
     UServerImageResizePolicy:
       Type: AWS::S3::BucketPolicy
       Properties:
