@@ -12,3 +12,11 @@ secrets.env
 # IDEs
 .vscode
 .idea
+
+# Images to be resized
+images_original/*
+!images_original/.gitkeep
+
+# Images already resized
+images_resized/*
+!images_resized/.gitkeep
