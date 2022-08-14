@@ -83,6 +83,8 @@ echo "------------------------"
 cd /deploy
 
 aws s3 cp --acl public-read ./static/ "s3://$bucket/static/" --recursive
+aws s3 cp --acl public-read ./images_original/ "s3://$bucket/images_original/" --recursive
+aws s3 cp --acl public-read ./images_resized/ "s3://$bucket/images_resized/" --recursive
 aws s3 cp --acl public-read index.html "s3://$bucket/"
 aws s3 cp --acl public-read error.html "s3://$bucket/"
 

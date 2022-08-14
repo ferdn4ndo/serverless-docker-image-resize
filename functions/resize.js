@@ -7,6 +7,9 @@ const sharp = require('sharp')
 const BUCKET = process.env.BUCKET
 const URL = `http://${process.env.BUCKET}.s3-website.${process.env.REGION}.amazonaws.com`
 
+const originalImagesFolder = "images_original/"
+const resizedImagesFolder = "images_resized/"
+
 // create the read stream abstraction for downloading data from S3
 const readStreamFromS3 = ({ Bucket, Key }) => {
   return S3.getObject({ Bucket, Key }).createReadStream()
@@ -34,10 +37,15 @@ const streamToSharp = ({ width, height }) => {
 exports.handler = async (event) => {
   const key = event.queryStringParameters.key
   const match = key.match(/(\d+)x(\d+)\/(.*)/)
+
   const width = parseInt(match[1], 10)
   const height = parseInt(match[2], 10)
-  const originalKey = match[3]
-  const newKey = '' + width + 'x' + height + '/' + originalKey
+  const originalFilename = match[3]
+  const sizeSubfolder = '' + width + 'x' + height + '/'
+
+  const originalKey = originalImagesFolder + originalFilename
+  const newKey = resizedImagesFolder + sizeSubfolder + originalFilename
+
   const imageLocation = `${URL}/${newKey}`
 
   try {
@@ -54,11 +62,17 @@ exports.handler = async (event) => {
     // wait for the stream to finish
     const uploadedData = await uploadFinished
 
-    // log data to Dashbird
+    // log data
     console.log('Data: ', {
-      ...uploadedData,
-      BucketEndpoint: URL,
-      ImageURL: imageLocation
+      uploadedData: uploadedData,
+      bucketUrl: URL,
+      width: width,
+      height: height,
+      originalFilename: originalFilename,
+      sizeSubfolder: sizeSubfolder,
+      originalKey: originalKey,
+      newKey: newKey,
+      imageLocation: imageLocation,
     })
 
     // return a 301 redirect to the newly created resource in S3
